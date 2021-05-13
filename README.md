@@ -63,6 +63,21 @@ Executamos os testes com o comando:
 Considere também utilizar "--lf" no final do comando para executar apenas os testes
 que falharam na última execução.
 
+## Ferramentas opcionais
+
+Considere instalar o black, o flake8 e mypy (pip install black mypy). O primeiro formata automaticamente
+código Python e os outros dois conseguem encontrar possíveis errors. Os trẽs ajudam em manter a qualidade do 
+código e facilitam a nossa vida a longo prazo. Executamos cada ferramenta como 
+"black|flake8|mypy <nome-do-arquivo>". Dependendo das configurações do Python, pode ser necessário fazer
+python3 -m <ferramenta> <nome-do-arquivo>. 
+
+O VSCode possui plugins que integram estas 3 ferramentas. Formate um arquivo Python com "ctrl + shift + i"
+e normalmente o VSCode perguntará se quer instalar o Black. Os avisos do Mypy e flake8 aparecem se estas 
+ferramentas estiverem habilitadas. Digite "ctrl + ," para abrir as configurações e busque por Mypy ou Flake8.
+
+O plugin Python da Microsoft utiliza o Pyright, que possui um escopo parecido com estas ferramentas e é uma
+boa alternativa ao Mypy e ao Flake8 já integrada ao próprio VSCode. 
+
 ## Enviando resultados
 
 Modifique o arquivo ruspy.py até passar em todos os testes. Quando isto acontecer,
