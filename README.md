@@ -321,3 +321,9 @@ BLOCK_COMMENT: "/* block comment */"
 %ignore COMMENT
 %ignore /\s+/
 ```
+
+Uma cópia exata desta gramática está no arquivo "ruspy.lark" neste mesmo repositório.
+
+## Começando os trabalhos
+
+Crie uma cópia do arquivo exemplo.py como ruspy.py e começe a trabalhar! A atividade mais fácil para começar a aquecer provavelmente é a re_basico. Mãos à obra!
