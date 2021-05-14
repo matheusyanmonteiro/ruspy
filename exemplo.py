@@ -39,7 +39,7 @@ class RuspyTransformer(InlineTransformer):
         "true": True,
         "false": False,
         "null": None,
-    }
+    }https://github.com/compiladores-fga/ruspy/blob/main/exemplo.py
 
     # Estas declarações de tipo existem somente para deixar o VSCode feliz.
     _transform_children: Any
@@ -53,7 +53,12 @@ class RuspyTransformer(InlineTransformer):
 
     # Trata símbolos terminais -------------------------------------------------
     def INT(self, tk):
-        return int(tk)
+        # Às vezes precisamos nos esforçar um pouquinho mais para obter o 
+        # resultado que simplesmente fazer a conversão int(x)
+        data = tk.replace('_', '')
+        if set(data) == {'0'}:
+            raise ValueError('# FIXME!')  # (a solução aqui é trivial :) 
+        return int(data)
 
     def FLOAT(self, tk):
         return int(tk)
