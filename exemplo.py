@@ -205,11 +205,13 @@ def _eval_or_exec(src: str, is_exec=False) -> Any:
 
     if isinstance(result, Tree):
         print(tree.pretty())
+        bads = [*tree.find_pred(lambda x: not hasattr(transformer, x.data))]
+        bad = bads[0] if bads else tree
         raise NotImplementedError(
             f"""
 não implementou regra para lidar com: {tree.data!r}.
 Crie um método como abaixo na classe do transformer.
-    def {tree.data}(self, ...): 
+    def {bad.data}(self, ...): 
         return ... 
 """
         )

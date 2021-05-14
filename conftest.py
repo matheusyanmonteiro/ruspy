@@ -65,14 +65,15 @@ def _eval_or_exec(src: str, grammar) -> Any:
     result = transformer.transform(tree)
 
     if isinstance(result, Tree):
+        bad = find_bad(tree)
         raise NotImplementedError(
             f"""
 {tree.pretty()}
 
-não implementou regra para lidar com: {tree.data!r}.
+não implementou regra para lidar com: {bad.data!r}.
 Crie um método como abaixo na classe do transformer.
 
-    def {tree.data}(self, ...): 
+    def {bad.data}(self, ...): 
         return ... 
 
 Em casos simples, é possível simplificar a gramática como, por exemplo, 
@@ -108,6 +109,12 @@ def mod():
     lex = ns["grammar_expr"].lex
     transformer = ns["RuspyTransformer"]
     lark.InlineTransformer
+
+    def find_bad(bad: lark.Tree):
+        bads = [*bad.find_pred(lambda x: not hasattr(transformer, x.data))]
+        return bads[0] if bads else bad
+
+    ns['find_bad'] = find_bad
 
     def parse(src):
         try:

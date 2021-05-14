@@ -50,7 +50,7 @@ import lark
         "0; { 1; 2 }": 2,
     }.items(),
 )
-def test_exemplos_positivos(src, v, mod, data):
+def test_exemplos_positivos(src, v, mod):
     print(f'Testando: {src!r}')
     print(mod.pretty(mod.parse(src)))
     assert mod.eval(src) == v
