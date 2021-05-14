@@ -185,7 +185,7 @@ def _eval_or_exec(src: str, is_exec=False) -> Any:
 
         tree = grammar.parse(src)
     except LarkError:
-        print("Erro avaliando a expressão: \n{src}")
+        print(f"Erro avaliando a expressão: \n{src}")
         print("\nImprimindo tokens")
         for i, tk in enumerate(grammar.lex(src), start=1):
             print(f" - {i}) {tk} ({tk.type})")
