@@ -1,16 +1,17 @@
 """
 Funcionalidades compartilhadas por todos modulos de teste
 """
+import json
 from types import SimpleNamespace
 from random import choice, random, randint
 import pytest
 import lark
 import os
 from pathlib import Path
+from hypothesis import settings
 
-#
-# Recursos
-#
+settings.register_profile("fast", max_examples=25)
+PATH = Path(__file__).parent
 EXTRA_SRC = r'''
 grammar_expr = Lark(GRAMMAR, parser="lalr", start="seq")
 grammar_mod = Lark(GRAMMAR, parser="lalr", start="mod")
@@ -93,6 +94,7 @@ def aux():
         digit=digit,
         randrange=randrange,
         rint=rint,
+        data=data_fn,
     )
 
 
@@ -104,8 +106,18 @@ rint = lambda: (
 )
 
 
+@pytest.fixture(scope="session")
+def data():
+    return data_fn
+
+
 def check_int(ex: str):
     n = ex.replace("_", "")
     assert not ex.startswith("_")
     assert n
     assert n.isdigit()
+
+
+def data_fn(name):
+    with open(PATH / "data" / (name + ".json")) as fd:
+        return json.load(fd)
