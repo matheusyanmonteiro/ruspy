@@ -62,6 +62,9 @@ def mod():
     if mod:
         mod = "-" + mod
     path = Path.cwd() / ("ruspy" + mod + ".py")
+    if not mod and not path.exists():
+        path = Path.cwd() / "ruspy-tmp.py"
+        
     with open(path) as fd:
         src = fd.read()
     ns = {}
@@ -75,27 +78,38 @@ def mod():
         raise ValueError("Não encontrou o RuspyTransformer")
 
     exec(EXTRA_SRC, ns)
-    ns["lex"] = lex = ns["grammar_expr"].lex
-    ns["parse"] = ns["grammar_expr"].parse
-    ns["parse_mod"] = ns["grammar_mod"].parse
-    ns["lex_list"] = lambda s: list(lex(s))
-    ns["transformer"] = transformer = ns["RuspyTransformer"]
-    ns["transform"] = lambda ast: [*transformer()._transform_children([ast])][0]
+    lex = ns["grammar_expr"].lex
+    transformer = ns["RuspyTransformer"]
     lark.InlineTransformer
-    return SimpleNamespace(**ns)
 
-
-@pytest.fixture(scope="session")
-def aux():
-
+    def parse(src):
+        try:
+            return ns["grammar_mod"].parse(src)
+        except:
+            return ns["grammar_expr"].parse(src)
+    
     return SimpleNamespace(
+        **ns,
+        lex=lex,
+        parse=parse,
+        parse_expr=ns["grammar_expr"].parse,
+        parse_mod=ns["grammar_mod"].parse,
+        lex_list=lambda s: list(lex(s)),
+        transformer=transformer,
+        transform=lambda ast: [*transformer()._transform_children([ast])][0],
         check_int=check_int,
         prob=prob,
         digit=digit,
         randrange=randrange,
         rint=rint,
         data=data_fn,
+        leaves=leaves,
     )
+
+
+@pytest.fixture(scope="session")
+def data():
+    return data_fn
 
 
 prob = lambda p: random() < p
@@ -104,11 +118,6 @@ randrange = lambda a, b: range(a, randint(a, b) + 1)
 rint = lambda: (
     digit() + "".join("_" if prob(0.25) else digit() for _ in randrange(0, 10))
 )
-
-
-@pytest.fixture(scope="session")
-def data():
-    return data_fn
 
 
 def check_int(ex: str):
@@ -121,3 +130,16 @@ def check_int(ex: str):
 def data_fn(name):
     with open(PATH / "data" / (name + ".json")) as fd:
         return json.load(fd)
+
+
+def leaves(tree):
+    leaves = []
+    
+    def visit(node):
+        for child in node.children:
+            if isinstance(child, lark.Tree):
+                visit(child)
+            else:
+                leaves.append(child)
+    visit(tree)
+    return leaves

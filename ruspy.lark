@@ -75,7 +75,7 @@ assign : ID "=" expr
        | expr_b
 
 // Expressões simples. Exigem ";" numa sequência.
-expr_s : assign
+?expr_s: assign
        | lambd
 
 // Expressões com blocos. O ";" é opcional nas sequências.
@@ -89,7 +89,7 @@ expr_s : assign
 //         println("x pequeno!");
 //         x
 //     }
-expr_b : block 
+?expr_b: block 
        | if_
        | for_
        | while_
