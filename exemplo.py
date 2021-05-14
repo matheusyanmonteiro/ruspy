@@ -39,7 +39,7 @@ class RuspyTransformer(InlineTransformer):
         "true": True,
         "false": False,
         "null": None,
-    }https://github.com/compiladores-fga/ruspy/blob/main/exemplo.py
+    }
 
     # Estas declarações de tipo existem somente para deixar o VSCode feliz.
     _transform_children: Any
