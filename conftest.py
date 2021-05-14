@@ -13,15 +13,34 @@ from hypothesis import settings
 settings.register_profile("fast", max_examples=25)
 PATH = Path(__file__).parent
 EXTRA_SRC = r'''
-grammar_expr = Lark(GRAMMAR, parser="lalr", start="seq")
+class _fn:
+    def __init__(self, fn):
+        self.fn = fn
+
+    def __repr__(self):
+        return self.fn.__name__
+
+    def __call__(self, src):
+        return self.fn(src)
+        
+
+grammar_seq = Lark(GRAMMAR, parser="lalr", start="seq")
+grammar_expr = Lark(GRAMMAR, parser="lalr", start="expr")
 grammar_mod = Lark(GRAMMAR, parser="lalr", start="mod")
 
+@_fn
 def eval(src):
-    return _eval_or_exec(src, is_exec=False)
+    return _eval_or_exec(src, grammar_seq)
 
+@_fn
+def expr(src):
+    return _eval_or_exec(src, grammar_expr)
+
+@_fn
 def module(src) -> dict:
-    return _eval_or_exec(src, is_exec=True)
+    return _eval_or_exec(src, grammar_mod)
 
+@_fn
 def run(src):
     mod = module(src)
     main = mod.get("main")
@@ -29,34 +48,41 @@ def run(src):
         raise RuntimeError('módulo não define uma função "main()"')
     main()
 
-def _eval_or_exec(src: str, is_exec=False) -> Any:
+def _eval_or_exec(src: str, grammar) -> Any:
     try:
-        grammar = grammar_mod if is_exec else grammar_expr
         tree = grammar.parse(src)
-    except LarkError:
-        print("Erro avaliando a expressão: \n{src}")
-        print("\nImprimindo tokens")
-        for i, tk in enumerate(grammar.lex(src), start=1):
-            print(f" - {i}) {tk} ({tk.type})")
-        raise
+    except LarkError as ex:
+        lines = [
+            f"Erro avaliando a expressão: \n{src}",
+            "",
+            "Imprimindo tokens",
+            *(f" - {i}) {tk} ({tk.type})" for i, tk in enumerate(grammar.lex(src), start=1)),
+        ]
+        prefix = '\n'.join(lines)
+        raise lark.LarkError(f'{prefix}\n\n{type(ex).__name__}: {ex}')
     transformer = RuspyTransformer()
     result = transformer.transform(tree)
 
     if isinstance(result, Tree):
-        print(tree.pretty())
         raise NotImplementedError(
             f"""
+{tree.pretty()}
+
 não implementou regra para lidar com: {tree.data!r}.
 Crie um método como abaixo na classe do transformer.
+
     def {tree.data}(self, ...): 
         return ... 
+
+Em casos simples, é possível simplificar a gramática como, por exemplo, 
+acrescentando um operador de ? antes do nome da regra.
 """
         )
     return result
 '''
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def mod():
     mod = os.environ.get("RUSPY", "")
     if mod:
@@ -64,7 +90,7 @@ def mod():
     path = Path.cwd() / ("ruspy" + mod + ".py")
     if not mod and not path.exists():
         path = Path.cwd() / "ruspy-tmp.py"
-        
+
     with open(path) as fd:
         src = fd.read()
     ns = {}
@@ -86,24 +112,31 @@ def mod():
         try:
             return ns["grammar_mod"].parse(src)
         except:
-            return ns["grammar_expr"].parse(src)
-    
+            try:
+                return ns["grammar_expr"].parse(src)
+            except:
+                return ns["grammar_seq"].parse(src)
+
     return SimpleNamespace(
-        **ns,
-        lex=lex,
-        parse=parse,
-        parse_expr=ns["grammar_expr"].parse,
-        parse_mod=ns["grammar_mod"].parse,
-        lex_list=lambda s: list(lex(s)),
-        transformer=transformer,
-        transform=lambda ast: [*transformer()._transform_children([ast])][0],
-        check_int=check_int,
-        prob=prob,
-        digit=digit,
-        randrange=randrange,
-        rint=rint,
-        data=data_fn,
-        leaves=leaves,
+        **{
+            **ns,
+            **{
+                "lex": lex,
+                "parse": parse,
+                "parse_expr": ns["grammar_expr"].parse,
+                "parse_mod": ns["grammar_mod"].parse,
+                "lex_list": lambda s: list(lex(s)),
+                "transformer": transformer,
+                "transform": lambda ast: [*transformer()._transform_children([ast])][0],
+                "check_int": check_int,
+                "prob": prob,
+                "digit": digit,
+                "randrange": randrange,
+                "rint": rint,
+                "data": data_fn,
+                "leaves": leaves,
+            },
+        }
     )
 
 
@@ -134,12 +167,13 @@ def data_fn(name):
 
 def leaves(tree):
     leaves = []
-    
+
     def visit(node):
         for child in node.children:
             if isinstance(child, lark.Tree):
                 visit(child)
             else:
                 leaves.append(child)
+
     visit(tree)
     return leaves

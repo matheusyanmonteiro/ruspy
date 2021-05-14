@@ -61,36 +61,6 @@ Crie um método como abaixo na classe do transformer.
     return result
 '''
 
-
-@pytest.fixture(scope="module")
-def mod():
-    mod = os.environ.get("RUSPY", "")
-    if mod:
-        mod = '-' + mod
-    path = Path.cwd() / ('ruspy' + mod + ".py")
-    with open(path) as fd:
-        src = fd.read()
-    ns = {}
-    exec(src, ns)
-
-    if "GRAMMAR" not in ns:
-        raise ValueError("não é permitido modificar o nome da variável GRAMMAR")
-    if not isinstance(ns["GRAMMAR"], str):
-        raise ValueError("a gramática deve ser uma string")
-    if "RuspyTransformer" not in ns:
-        raise ValueError("Não encontrou o RuspyTransformer")
-
-    exec(EXTRA_SRC, ns)
-    ns["lex"] = lex = ns["grammar_expr"].lex
-    ns["parse"] = ns["grammar_expr"].parse
-    ns["parse_mod"] = ns["grammar_mod"].parse
-    ns["lex_list"] = lambda s: list(lex(s))
-    ns["transformer"] = transformer = ns["RuspyTransformer"]
-    ns["transform"] = lambda ast: [*transformer()._transform_children([ast])][0]
-    lark.InlineTransformer
-    return SimpleNamespace(**ns)
-
-
 #
 # Testes
 #

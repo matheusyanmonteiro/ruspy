@@ -106,7 +106,10 @@ class RuspyTransformer(InlineTransformer):
         if isinstance(obj, Tree):
             return self.transform(obj)
         elif isinstance(obj, Token):
-            raise ValueError(obj, obj.type)
+            try:
+                return getattr(self, obj.type)(obj)
+            except AttributeError:
+                return obj
         else:
             return obj
 

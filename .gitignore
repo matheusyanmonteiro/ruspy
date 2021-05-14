@@ -4,3 +4,4 @@ ruspy-tmp.py
 .hypothesis/
 .mypy_cache/
 __pycache__/
+gen_tokens.py
