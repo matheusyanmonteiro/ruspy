@@ -1,0 +1,321 @@
+mod
+  fn
+    pair
+    args
+      arg	x
+      arg	y
+    lambd
+      args
+        arg	idx
+      if_
+        0
+        x
+        y
+  fn
+    l1
+    args
+      arg	a
+    call
+      pair
+      xargs
+        a
+        null
+  fn
+    l2
+    args
+      arg	a
+      arg	b
+    call
+      pair
+      xargs
+        a
+        call
+          l1
+          xargs	b
+  fn
+    l3
+    args
+      arg	a
+      arg	b
+      arg	c
+    call
+      pair
+      xargs
+        a
+        call
+          l2
+          xargs
+            b
+            c
+  fn
+    l4
+    args
+      arg	a
+      arg	b
+      arg	c
+      arg	d
+    call
+      pair
+      xargs
+        a
+        call
+          l3
+          xargs
+            b
+            c
+            d
+  fn
+    l5
+    args
+      arg	a
+      arg	b
+      arg	c
+      arg	d
+      arg	e
+    call
+      pair
+      xargs
+        a
+        call
+          l4
+          xargs
+            b
+            c
+            d
+            e
+  fn
+    l6
+    args
+      arg	a
+      arg	b
+      arg	c
+      arg	d
+      arg	e
+      arg	f
+    call
+      pair
+      xargs
+        a
+        call
+          l5
+          xargs
+            b
+            c
+            d
+            e
+            f
+  fn
+    l7
+    args
+      arg	a
+      arg	b
+      arg	c
+      arg	d
+      arg	e
+      arg	f
+      arg	g
+    call
+      pair
+      xargs
+        a
+        call
+          l6
+          xargs
+            b
+            c
+            d
+            e
+            f
+            g
+  fn
+    l8
+    args
+      arg	a
+      arg	b
+      arg	c
+      arg	d
+      arg	e
+      arg	f
+      arg	g
+      arg	h
+    call
+      pair
+      xargs
+        a
+        call
+          l7
+          xargs
+            b
+            c
+            d
+            e
+            f
+            g
+            h
+  fn
+    head
+    args
+      arg	pair
+    call
+      pair
+      xargs	0
+  fn
+    tail
+    args
+      arg	pair
+    call
+      tail
+      xargs	1
+  fn
+    map
+    args
+      arg	f
+      arg	lst
+    if_
+      eq
+        lst
+        null
+      ret	lst
+      ret
+        call
+          pair
+          xargs
+            call
+              f
+              xargs
+                call
+                  head
+                  xargs	lst
+            call
+              map
+              xargs
+                f
+                call
+                  tail
+                  xargs	lst
+  fn
+    filter
+    args
+      arg	f
+      arg	lst
+    if_
+      eq
+        lst
+        null
+      ret	lst
+      if_
+        call
+          f
+          xargs
+            call
+              head
+              xargs	lst
+        ret
+          call
+            pair
+            xargs
+              x
+              call
+                filter
+                xargs
+                  f
+                  call
+                    tail
+                    xargs	lst
+        ret
+          call
+            filter
+            xargs
+              f
+              call
+                tail
+                xargs	lst
+  fn
+    sort
+    args
+      arg	lst
+    if_
+      eq
+        lst
+        null
+      ret	lst
+      seq
+        let
+          assign
+            pivot
+            call
+              head
+              xargs	lst
+        seq
+          let
+            assign
+              small
+              call
+                filter
+                xargs
+                  lambd
+                    args
+                      arg	x
+                    le
+                      x
+                      pivot
+                  call
+                    tail
+                    xargs	lst
+          seq
+            let
+              assign
+                large
+                call
+                  filter
+                  xargs
+                    lambd
+                      args
+                        arg	x
+                      gt
+                        x
+                        pivot
+                    call
+                      tail
+                      xargs	lst
+            ret
+              call
+                pair
+                xargs
+                  small
+                  call
+                    pair
+                    xargs
+                      pivot
+                      large
+  fn
+    main
+    args
+    seq
+      let
+        assign
+          lst
+          call
+            l8
+            xargs
+              2
+              2
+              4
+              6
+              2
+              3
+              2
+              3
+      seq
+        call
+          map
+          xargs
+            println
+            lst
+        call
+          map
+          xargs
+            println
+            call
+              sort
+              xargs	lst

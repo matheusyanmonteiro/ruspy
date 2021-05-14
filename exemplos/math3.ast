@@ -1,0 +1,18 @@
+call
+  println
+  xargs
+    call
+      sqrt
+      xargs
+        mul
+          2
+          call
+            sqrt
+            xargs
+              add
+                2
+                2
+    5
+    6
+    7
+    "more"

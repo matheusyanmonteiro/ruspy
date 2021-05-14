@@ -1,0 +1,11 @@
+seq
+  assign
+    x
+    1
+  seq
+    assign
+      y
+      2
+    add
+      x
+      y

@@ -151,6 +151,7 @@ def mod():
                 "data": data_fn,
                 "leaves": leaves,
                 "pretty": pretty,
+                "PATH": PATH,
             },
         }
     )

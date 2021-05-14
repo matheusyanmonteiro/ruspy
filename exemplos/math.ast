@@ -1,0 +1,18 @@
+seq
+  assign
+    x
+    3
+  seq
+    assign
+      y
+      4
+    call
+      sqrt
+      xargs
+        add
+          mul
+            x
+            x
+          mul
+            y
+            y

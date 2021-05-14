@@ -1,0 +1,40 @@
+mod
+  fn
+    fib
+    args
+      arg
+        n
+        int
+    if_
+      le
+        n
+        1
+      ret	1
+      ret
+        add
+          call
+            fib
+            xargs
+              sub
+                n
+                1
+          call
+            fib
+            xargs
+              sub
+                n
+                2
+  fn
+    main
+    args
+    for_
+      i
+      range
+        0
+        10
+      call
+        println
+        xargs
+          call
+            fib
+            xargs	i

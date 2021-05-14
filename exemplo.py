@@ -63,8 +63,6 @@ class RuspyTransformer(InlineTransformer):
     def FLOAT(self, tk):
         return int(tk)
 
-    ...
-
     # Trata símbolos não-terminais ---------------------------------------------
     def lit(self, tk):
         if not isinstance(tk, Token):
