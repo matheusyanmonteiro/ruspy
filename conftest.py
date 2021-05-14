@@ -1,6 +1,7 @@
 """
 Funcionalidades compartilhadas por todos modulos de teste
 """
+from pprint import pformat
 import json
 from types import SimpleNamespace
 from random import choice, random, randint
@@ -94,7 +95,7 @@ def mod():
     with open(path) as fd:
         src = fd.read()
     ns = {}
-    exec(src, ns)
+    exec(compile(src, 'ruspy.py', 'exec'), ns)
 
     if "GRAMMAR" not in ns:
         raise ValueError("não é permitido modificar o nome da variável GRAMMAR")
@@ -103,7 +104,7 @@ def mod():
     if "RuspyTransformer" not in ns:
         raise ValueError("Não encontrou o RuspyTransformer")
 
-    exec(EXTRA_SRC, ns)
+    exec(compile(EXTRA_SRC, 'extra.py', 'exec'), ns)
     lex = ns["grammar_expr"].lex
     transformer = ns["RuspyTransformer"]
     lark.InlineTransformer
@@ -117,12 +118,19 @@ def mod():
             except:
                 return ns["grammar_seq"].parse(src)
 
+    def pretty(obj):
+        try:
+            return obj.pretty()
+        except AttributeError:
+            return pformat(obj)
+
     return SimpleNamespace(
         **{
             **ns,
             **{
                 "lex": lex,
                 "parse": parse,
+                "parse_seq": ns["grammar_seq"].parse,
                 "parse_expr": ns["grammar_expr"].parse,
                 "parse_mod": ns["grammar_mod"].parse,
                 "lex_list": lambda s: list(lex(s)),
@@ -135,6 +143,7 @@ def mod():
                 "rint": rint,
                 "data": data_fn,
                 "leaves": leaves,
+                "pretty": pretty,
             },
         }
     )

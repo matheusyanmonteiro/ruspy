@@ -90,4 +90,6 @@ def test_exemplos_positivos(src, leaves, mod):
 )
 def test_exemplos_negativos(ex, mod):
     with pytest.raises(lark.LarkError):
-        mod.parse(ex)
+        print(f"Código inválido foi aceito: {ex!r}")
+        print(mod.parse_seq(ex).pretty())
+        

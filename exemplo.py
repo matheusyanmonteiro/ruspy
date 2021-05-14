@@ -67,10 +67,12 @@ class RuspyTransformer(InlineTransformer):
 
     # Trata símbolos não-terminais ---------------------------------------------
     def lit(self, tk):
-        assert not isinstance(
-            tk, Token
-        ), f"Implemente a regra def {tk.type}(self, tk): ... no transformer"
-        return tk
+        if not isinstance(tk, Token):
+            return tk
+        try:
+            return getattr(self, tk.type)(tk)
+        except AttributeError:
+            raise NotImplementedError(f"Implemente a regra def {tk.type}(self, tk): ... no transformer")
 
     def name(self, name):
         raise NotImplementedError("name")
