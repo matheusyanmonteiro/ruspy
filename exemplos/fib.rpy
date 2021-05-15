@@ -8,7 +8,7 @@ fn fib(n: int) {
 }
 
 fn main() {
-    for i in 0 .. 10 {
+    for i in 0 .. 20 {
         println(fib(i))
     }
 }

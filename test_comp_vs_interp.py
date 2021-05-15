@@ -42,3 +42,7 @@ Salve a sua resposta em duas variáveis do tipo string como abaixo:
 
     """
 '''
+import pytest
+
+def test_verificações_básicas():
+    pytest.skip('o código de teste ainda não está pronto')

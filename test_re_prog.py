@@ -25,3 +25,8 @@ em conjunto no lexer, pode submeter as expressões na variável
 Lembrando mais uma vez: se os testes de lex-re passaram, NÂO PRECISA submeter
 esta resposta já que a pontuação é conferida automaticamente.
 """
+import pytest
+
+
+def test_verificações_básicas():
+    pytest.skip("o código de teste ainda não está pronto")
