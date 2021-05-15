@@ -7,6 +7,8 @@ Representar precedência de operadores em gramática (E)BNF
 * Definir gramática para obter uma precedência desejada.
 * Implementar corretamente exemplos clássicos como uma calculadora.
 
+----
+
 As regras de precedência da gramática do ruspy estão incorretas. Implemente a
 precedência e associatividade de operadores de acordo com as regras em 
 
@@ -15,6 +17,11 @@ https://doc.rust-lang.org/reference/expressions.html?highlight=operator%20preced
 Note que alguns operadores foram omitidos no ruspy (como *, & e &mut unários).
 Minha sugestão é se guiar pelos testes para verificar o que falta ser implementado
 e o que está correto na gramática.
+
+ATENÇÂO: este exercício será dividido em duas partes, uma para a competência
+cfg-op e outra para proj-calc. A primeira avalia apenas a gramática e a segunda
+avalia também a execução das operações. Não será necessário modificar o
+código após a divisão nas duas competências. 
 """
 import pytest
 import lark

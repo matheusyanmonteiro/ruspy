@@ -1,14 +1,14 @@
 mod
   fn
-    pair
+    cons
     args
       arg	x
       arg	y
     lambd
       args
-        arg	idx
+        arg	is_head
       if_
-        0
+        is_head
         x
         y
   fn
@@ -16,7 +16,7 @@ mod
     args
       arg	a
     call
-      pair
+      cons
       xargs
         a
         null
@@ -26,7 +26,7 @@ mod
       arg	a
       arg	b
     call
-      pair
+      cons
       xargs
         a
         call
@@ -39,7 +39,7 @@ mod
       arg	b
       arg	c
     call
-      pair
+      cons
       xargs
         a
         call
@@ -55,7 +55,7 @@ mod
       arg	c
       arg	d
     call
-      pair
+      cons
       xargs
         a
         call
@@ -73,7 +73,7 @@ mod
       arg	d
       arg	e
     call
-      pair
+      cons
       xargs
         a
         call
@@ -93,7 +93,7 @@ mod
       arg	e
       arg	f
     call
-      pair
+      cons
       xargs
         a
         call
@@ -115,7 +115,7 @@ mod
       arg	f
       arg	g
     call
-      pair
+      cons
       xargs
         a
         call
@@ -139,7 +139,7 @@ mod
       arg	g
       arg	h
     call
-      pair
+      cons
       xargs
         a
         call
@@ -155,17 +155,17 @@ mod
   fn
     head
     args
-      arg	pair
+      arg	lst
     call
-      pair
-      xargs	0
+      lst
+      xargs	true
   fn
     tail
     args
-      arg	pair
+      arg	lst
     call
-      tail
-      xargs	1
+      lst
+      xargs	false
   fn
     map
     args
@@ -175,10 +175,10 @@ mod
       eq
         lst
         null
-      ret	lst
+      ret	null
       ret
         call
-          pair
+          cons
           xargs
             call
               f
@@ -198,23 +198,23 @@ mod
     args
       arg	f
       arg	lst
-    if_
-      eq
-        lst
-        null
-      ret	lst
+    seq
       if_
-        call
-          f
-          xargs
+        eq
+          lst
+          null
+        ret	lst
+      seq
+        let
+          assign
+            x
             call
               head
               xargs	lst
-        ret
-          call
-            pair
-            xargs
-              x
+        seq
+          let
+            assign
+              rest
               call
                 filter
                 xargs
@@ -222,14 +222,17 @@ mod
                   call
                     tail
                     xargs	lst
-        ret
-          call
-            filter
-            xargs
+          if_
+            call
               f
+              xargs	x
+            ret
               call
-                tail
-                xargs	lst
+                cons
+                xargs
+                  x
+                  rest
+            ret	rest
   fn
     sort
     args
@@ -249,45 +252,103 @@ mod
         seq
           let
             assign
-              small
+              rest
               call
-                filter
-                xargs
-                  lambd
-                    args
-                      arg	x
-                    le
-                      x
-                      pivot
-                  call
-                    tail
-                    xargs	lst
+                tail
+                xargs	lst
           seq
             let
               assign
-                large
+                le
                 call
                   filter
                   xargs
                     lambd
                       args
                         arg	x
-                      gt
+                      le
                         x
                         pivot
-                    call
-                      tail
-                      xargs	lst
-            ret
-              call
-                pair
-                xargs
-                  small
+                    rest
+            seq
+              let
+                assign
+                  gt
                   call
-                    pair
+                    filter
                     xargs
-                      pivot
-                      large
+                      lambd
+                        args
+                          arg	x
+                        gt
+                          x
+                          pivot
+                      rest
+              ret
+                call
+                  join
+                  xargs
+                    call
+                      sort
+                      xargs	le
+                    call
+                      cons
+                      xargs
+                        pivot
+                        call
+                          sort
+                          xargs	gt
+  fn
+    join
+    args
+      arg	l1
+      arg	l2
+    call
+      rjoin
+      xargs
+        call
+          reverse
+          xargs	l1
+        l2
+  fn
+    rjoin
+    args
+      arg	l1
+      arg	l2
+    seq
+      if_
+        eq
+          l1
+          null
+        ret	l2
+      seq
+        let
+          assign
+            x
+            call
+              head
+              xargs	l1
+        ret
+          call
+            rjoin
+            xargs
+              call
+                tail
+                xargs	l1
+              call
+                cons
+                xargs
+                  x
+                  l2
+  fn
+    reverse
+    args
+      arg	lst
+    call
+      rjoin
+      xargs
+        lst
+        null
   fn
     main
     args
@@ -298,24 +359,28 @@ mod
           call
             l8
             xargs
+              1
+              5
               2
-              2
-              4
+              8
+              7
               6
-              2
               3
-              2
-              3
+              4
       seq
         call
           map
           xargs
             println
             lst
-        call
-          map
-          xargs
+        seq
+          call
             println
-            call
-              sort
-              xargs	lst
+            xargs	"ordenada"
+          call
+            map
+            xargs
+              println
+              call
+                sort
+                xargs	lst

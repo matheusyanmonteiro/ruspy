@@ -17,6 +17,7 @@ que o seu código realmente retorna.
 
 import pytest
 import lark
+import difflib
 
 mods = {"fib", "pair"}
 
@@ -57,8 +58,13 @@ def test_exemplos(name, mod):
 
     if target != ast:
         print("\n\nÁrvores diferentes!")
-        print("Saída:")
-        print(ast)
-        print("\nEsperado:")
-        print(target)
+        if len(target) == 0:
+            print("Saída:")
+            print(ast)
+            print("\nEsperado:")
+            print(target)
+        else:
+            diff = difflib.ndiff(ast.splitlines(), target.splitlines())
+            print('Diff:')
+            print('\n'.join(diff))
         raise AssertionError("árvores sintáticas diferem!")

@@ -1,8 +1,18 @@
 """
 # re-basico 
 
-Criar padrões de regex simples a partir de operações básicas. Este exercício
-verifica apenas padrões que formam números inteiros simples em Ruspy.
+Criar padrões de regex simples a partir de operações básicas. 
+
+Este exercício verifica apenas padrões que formam números inteiros simples em 
+Ruspy.
+
+Modifique a regra de símbolo terminal INT para para aceitar todos os inteiros
+abaixo:
+
+    42, 0_0, 000, 01, 1_000_000, 0__0__0, 123456789
+
+Também é necessário modificar o método INT do transformer para realizar a 
+conversão de inteiros para o Python.
 """
 from types import SimpleNamespace
 from random import choice, random, randint
