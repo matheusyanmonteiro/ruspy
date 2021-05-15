@@ -232,14 +232,14 @@ if __name__ == "__main__":
         print("         avalia como expressão no modo script, como se")
         print("         estivéssemos executando o código dentro da função main()")
         exit()
-    elif sys.argv[-1] == "--eval":
+    elif "--script" in sys.argv:
         do_eval = True
-        sys.argv.pop()
+        del sys.argv[sys.argv.index("--script")]
     else:
         do_eval = False
     with open(sys.argv[-1]) as fd:
         src = fd.read()
         if do_eval:
-            print(f"{src}\n\n> {eval(src)}")
+            print(f"\n> {eval(src)}")
         else:
             run(src)

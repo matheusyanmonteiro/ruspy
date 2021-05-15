@@ -200,7 +200,7 @@ lit    : INT
        | ID                -> name
 
 
-// SÍMBOLOS NÃO-TERMINAIS
+// SÍMBOLOS TERMINAIS
 //
 // Você pode mudar estas regras, mas talvez seja necessário adaptar a regra de 
 // "lit" no parser)
