@@ -8,8 +8,6 @@ Utilizar transformers para obter resultados a partir da árvore sintática.
 
 Em boa medida, os testes desta competência já seguem como consequência de 
 implementar as outras corretamente. 
-
-O 
 """
 import pytest
 from contextlib import redirect_stderr, redirect_stdout
