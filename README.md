@@ -365,7 +365,13 @@ Ruspy
 
 Autômatos
 
-1. O arquivo test_automatos.py na realidade testa 5 competências: dfa-repr, nfa-repr, nfa-thompson, nfa-epsilon, nfa-dfa
+O arquivo test_automatos.py na realidade testa 5 competências: 
+
+1. dfa-repr
+2. nfa-repr
+3. nfa-thompson
+4. nfa-epsilon
+5. nfa-dfa
 
 Arquitetura de compiladores
 
@@ -377,3 +383,10 @@ Padrões de expressões regulares
 1. re_ler
 2. re_pat
 3. re_grp
+
+Lembramos também que já submetemos algumas competências de atividades anteriores
+
+1. checkio básico
+2. checkio home
+3. cfg-clássicas
+4. ... e competências adicionais ...

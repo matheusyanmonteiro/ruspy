@@ -57,7 +57,7 @@ class RuspyTransformer(InlineTransformer):
         """resultado que simplesmente fazer a conversão int(x)"""
         data = tk.replace('_', '')
         if set(data) == {'0'}:
-            raise ValueError('# FIXME!')  # (a solução aqui é trivial :) 
+            raise ValueError('FIXME!')  # (a solução aqui é trivial :) 
         return int(data)
 
     def FLOAT(self, tk):
